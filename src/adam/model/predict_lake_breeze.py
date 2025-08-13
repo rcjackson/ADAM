@@ -19,7 +19,7 @@ class Identity(torch.nn.Module):
 
 def infer_lake_breeze(radar_scan: RadarImage,
                     model_name='lakebreeze_model_fcn_resnet50_no_augmentation',
-                    device='cpu'
+                    device='cpu',
                     area_threshold=20):
     """
     This module will infer the location of the lake breeze from a radar image.
