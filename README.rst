@@ -17,7 +17,9 @@ ATMOS Analogue Digital Twin
 
 
 
-A proof of concept for a digital twin for the Argonne Testbed for Multiscale Observational Studies. This initial package contains a model that determines the lakebreeze front location from the 0.5 degree scan of the NEXRAD radar.
+A proof of concept for a digital twin for the Argonne Testbed for Multiscale Observational Studies. 
+This initial package contains a model that determines the lakebreeze front location from the 
+0.5 degree scan of the NEXRAD radar.
 
 
 * Free software: BSD license

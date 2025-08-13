@@ -1,0 +1,29 @@
+name: adam-docs
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.12
+  - pip
+  - arm_pyart
+  - cython
+  - cmweather
+  - pytest
+  - pytest-mpl
+  - pytest-cov
+  - cartopy
+  - pyproj=3.3
+  - cfgrib
+  - eccodes
+  - sphinx
+  - herbie-data
+  - nbsphinx
+  - pydata-sphinx-theme
+  - pooch
+  - cmweather
+  - myst-nb
+  - sphinx-gallery
+  - sphinx-copybutton
+  - sphinx-design
+  - torch
+  - torchvision

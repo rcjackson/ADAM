@@ -5,7 +5,8 @@ Credits
 Development Lead
 ----------------
 
-* Robert Clyde Jackson <rjackson@anl.gov>
+* Bobby Jackson <rjackson@anl.gov>
+* Seongha Park <seongha.park@anl.gov>
 
 Contributors
 ------------

@@ -44,7 +44,6 @@ package-dir = {"" = "src"}
 "*" = ["*.*"]
 
 
-
 [tool.setuptools.dynamic]
 version = {attr = "adam.__version__"}
 

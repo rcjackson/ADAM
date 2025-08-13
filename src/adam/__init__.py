@@ -4,8 +4,8 @@ __author__ = """Robert Jackson, Seongha Park"""
 __email__ = 'rjackson@anl.gov'
 __version__ = '0.1.0'
 
-from io import *   # noqa
-from model import *   # noqa
-from vis import *   # noqa
+from . import io  # noqa
+from . import model   # noqa
+from . import vis  # noqa
 
 
