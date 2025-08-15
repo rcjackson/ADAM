@@ -29,10 +29,11 @@ all required dependencies:
 
 .. code-block:: console
 
-        pip install adam
+        pip install adam-atmos
 
 Getting Started
 ---------------
+
 
 After installation, you can import ADAM in your Python scripts or notebooks:
 

@@ -58,12 +58,13 @@ Installation
 Stable release
 --------------
 
+
 To install the Argonne Testbed for Multiscale Observational Studies (ATMOS)
 Analogue Digital Twin, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install adam
+    $ pip install adam-atmos
 
 This is the preferred method to install the ATMOS Analogue Digital Twin,
 as it will always install the most recent stable release.
