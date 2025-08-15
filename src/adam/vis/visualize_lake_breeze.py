@@ -44,9 +44,6 @@ def visualize_lake_breeze(radar_scan: RadarImage, bg_field='reflectivity', time=
             raise ValueError("Since the input radar_scan represents a batch of radar files, the UTC time in YYYY-MM-DDTHH:MM:SS format must be specified!")
         target_time = np.datetime64(time)
         my_ind = np.argmin(np.abs(my_times - target_time))
-        #if np.abs(my_times - target_time)[my_ind] > np.timedelta64(600., 's'):
-        #    warnings.warn(UserWarning, f"The closest scan available is more than 10 minutes away from {time}.")
-
         pyart_obj = pyart.io.read(radar_scan.pyart_object[my_ind])
         lakebreeze_mask = radar_scan.lakebreeze_mask[my_ind].T
     else:
@@ -67,7 +64,8 @@ def visualize_lake_breeze(radar_scan: RadarImage, bg_field='reflectivity', time=
     ax.coastlines()
     ax.add_feature(cfeature.STATES)
     ax.contour(radar_scan.grid_lon, radar_scan.grid_lat,
-            lakebreeze_mask, levels=1)
+               lakebreeze_mask, levels=1)
     if isinstance(radar_scan.pyart_object, list):
         del pyart_obj
     return fig, ax
+

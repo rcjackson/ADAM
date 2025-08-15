@@ -89,8 +89,8 @@ def infer_lake_breeze(radar_scan: RadarImage,
     return radar_scan
 
 def infer_lake_breeze_batch(radar_list,
-                    model_name='lakebreeze_best_model_fcn_resnet50',
-                    area_threshold=20):
+                            model_name='lakebreeze_best_model_fcn_resnet50',
+                            area_threshold=20):
     """
     This module will infer the location of the lake breeze from a batch of radar images.
 

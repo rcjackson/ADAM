@@ -71,11 +71,30 @@ class RadarImage(object):
             return self.lakebreeze_mask[key]
         elif isinstance(key, np.datetime64):
             return self.aggregate(start_time=key, end_time=key)
+        elif isinstance(key, str):
+            key = np.datetime64(key)
+            return self.aggregate(start_time=key, end_time=key)
+        elif isinstance(key, slice):
+            return self.lakebreeze_mask[key]
+        elif isinstance(key, list) or isinstance(key, np.ndarray):
+            if all(isinstance(x, int) for x in key):
+                return [self.lakebreeze_mask[x] for x in key]
+            elif all(isinstance(x, (str, np.datetime64)) for x in key):
+                masks = []
+                for time in key:
+                    if isinstance(time, str):
+                        time = np.datetime64(time)
+                    masks.append(self.aggregate(start_time=time, end_time=time))
+                return masks
+            else:
+                raise TypeError("All keys in the list must be of the same type: int, str, or np.datetime64('s').")
+        else:
+            raise TypeError("Key must be an int, np.datetime64('s'), str, or slice.")
         
     def aggregate(self, start_time=None, end_time=None):
         """
         This function aggregates the lake breeze mask over a specified time period.
-        If no time period is specified, it returns the sum of all of the masks
+        If no time period is specified, it returns the sum of all of the masks.
 
         Parameters
         ----------
@@ -98,7 +117,7 @@ class RadarImage(object):
             start_time = np.datetime64(start_time)
         if isinstance(end_time, str):
             end_time = np.datetime64(end_time)
-        if start_time is None ^ end_time is None:
+        if (start_time is None) ^ (end_time is None):
             raise ValueError("Both start_time and end_time must be specified for aggregation.")
         indices = np.where((self.times >= start_time) & (self.times <= end_time))[0]
         if len(indices) == 0:
@@ -179,13 +198,13 @@ def preprocess_radar_image(radar, rad_time=None, lat_range=(41.1280, 42.5680),
     fig, ax = plt.subplots(1, 1, figsize=(2.56, 2.56),
             subplot_kw=dict(projection=ccrs.PlateCarree(), frameon=False))
 
-    disp.plot_ppi_map('reflectivity', sweep=1, min_lon=lon_range[0],
+    disp.plot_ppi_map('reflectivity', sweep=0, min_lon=lon_range[0],
             ax=ax, max_lon=lon_range[1], min_lat=lat_range[0], max_lat=lat_range[1],
             embellish=False, vmin=-20, vmax=60, cmap='HomeyerRainbow',
             add_grid_lines=False, colorbar_flag=False, title_flag=False)
     ax.set_axis_off()
     fig.tight_layout(pad=0, w_pad=0, h_pad=0)
-    with tempfile.NamedTemporaryFile(mode='w+b' ) as temp_file:
+    with tempfile.NamedTemporaryFile(mode='w+b') as temp_file:
         fig.savefig(temp_file, dpi=100)
         plt.close(fig)
         # Transform image
@@ -205,10 +224,10 @@ def preprocess_radar_image(radar, rad_time=None, lat_range=(41.1280, 42.5680),
     rad_image.pyart_object = cur_radar
     rad_image.grid_lat = lats
     rad_image.grid_lon = lons
-    center_lat = rad_image.lat_range.sum() / 2.
-    center_lon = rad_image.lon_range.sum() / 2.
+    center_lat = (rad_image.lat_range[0] + rad_image.lat_range[1]) / 2.
+    center_lon = (rad_image.lon_range[0] + rad_image.lon_range[1]) / 2.
     rad_image.grid_x, rad_image.grid_y = _latlon_to_xy(
-        rad_image.grid_lat, rad_image.grid_lon, rad_image.lat_range[0], center_lat, center_lon)
+        rad_image.grid_lat, rad_image.grid_lon, center_lat, center_lon)
     rad_image.times = [np.datetime64(cur_radar.time["units"].split()[2])]
     
     return rad_image
@@ -277,7 +296,7 @@ def _preprocess(rad_file, lat_range, lon_range):
     fig, ax = plt.subplots(1, 1, figsize=(2.56, 2.56),
             subplot_kw=dict(projection=ccrs.PlateCarree(), frameon=False))
 
-    disp.plot_ppi_map('reflectivity', sweep=1, min_lon=lon_range[0],
+    disp.plot_ppi_map('reflectivity', sweep=0, min_lon=lon_range[0],
             ax=ax, max_lon=lon_range[1], min_lat=lat_range[0], max_lat=lat_range[1],
             embellish=False, vmin=-20, vmax=60, cmap='HomeyerRainbow',
             add_grid_lines=False, colorbar_flag=False, title_flag=False)
