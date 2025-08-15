@@ -17,9 +17,37 @@ ATMOS Analogue Digital Twin
 
 
 
-A proof of concept for a digital twin for the Argonne Testbed for Multiscale Observational Studies. 
-This initial package contains a model that determines the lakebreeze front location from the 
-0.5 degree scan of the NEXRAD radar.
+
+ADAM is the ATMOS Analogue Digital Twin, a Python package that provides tools and predictive models for analyzing lake breezes using NEXRAD radar data.
+This initial package contains a model that determines the lake breeze front location from the 0.5 degree scan of the NEXRAD radar.
+
+Installation
+------------
+
+The recommended way to install ADAM is via pip. This will ensure you get the latest stable release and 
+all required dependencies:
+
+.. code-block:: console
+
+        pip install adam
+
+Getting Started
+---------------
+
+After installation, you can import ADAM in your Python scripts or notebooks:
+
+.. code-block:: python
+
+        import adam
+
+ADAM includes a predictive model for detecting and analyzing lake breezes from NEXRAD radar data.
+See the documentation and example notebooks for usage details.
+
+Links
+-----
+
+- Documentation: https://rcjackson.github.io/adam/
+- Source code: https://github.com/rcjackson/adam
 
 
 * Free software: BSD license
@@ -29,7 +57,9 @@ This initial package contains a model that determines the lakebreeze front locat
 Features
 --------
 
-* TODO
+* Lake breeze detection from NEXRAD radar data using deep learning models.
+* Easy-to-use API for loading and processing radar data.
+* Example notebooks demonstrating functionality.
 
 Credits
 -------

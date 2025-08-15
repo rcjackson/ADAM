@@ -14,7 +14,7 @@ Welcome to ATMOS Analogue Digital Twin (ADAM)'s documentation!
         The cookbook provides in-depth information on how
         to use ADAM, including how to get started.
         This is where to look for general conceptual descriptions on how
-        to use parts of ADAM, including how to make your first wind retrieval and
+        to use parts of ADAM, including how to make your first lake breeze front and
         the required data preprocessing to do so.
 
     .. grid-item-card:: :octicon:`list-unordered;10em`

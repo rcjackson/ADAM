@@ -14,6 +14,7 @@
    .. autosummary::
    
       ~RadarImage.__init__
+      ~RadarImage.aggregate
    
    
 
@@ -23,6 +24,7 @@
 
    .. autosummary::
    
+      ~RadarImage.aggregated_mask
       ~RadarImage.grid_lat
       ~RadarImage.grid_lon
       ~RadarImage.lakebreeze_mask
@@ -30,5 +32,6 @@
       ~RadarImage.lon_range
       ~RadarImage.pyart_object
       ~RadarImage.pytorch_image
+      ~RadarImage.times
    
    

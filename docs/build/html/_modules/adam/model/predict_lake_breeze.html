@@ -297,6 +297,7 @@
 <a class="viewcode-back" href="../../../dev_reference/generated/adam.model.infer_lake_breeze.html#adam.model.infer_lake_breeze">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">infer_lake_breeze</span><span class="p">(</span><span class="n">radar_scan</span><span class="p">:</span> <span class="n">RadarImage</span><span class="p">,</span>
                     <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;lakebreeze_model_fcn_resnet50_no_augmentation&#39;</span><span class="p">,</span>
+                    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span>
                     <span class="n">area_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This module will infer the location of the lake breeze from a radar image.</span>
@@ -313,6 +314,8 @@
 <span class="sd">        &#39;lakebreeze_best_model_fcn_resnet50&#39;:</span>
 <span class="sd">        A fine-tuned ResNet50 trained with data augmentation. Typically more conservative</span>
 <span class="sd">        in detecting lake breezes.</span>
+<span class="sd">    device: str</span>
+<span class="sd">        The device to run the model on. Default is &#39;cpu&#39;. Use &#39;cuda&#39; for GPU inference.</span>
 <span class="sd">    area_threshold: int</span>
 <span class="sd">        The minimum continuous area in pixels for lake breeze segments. This helps</span>
 <span class="sd">        remove false positive speckles that are identified by the model.</span>
@@ -345,7 +348,8 @@
     <span class="n">state_dict</span> <span class="o">=</span> <span class="n">hf_hub_download</span><span class="p">(</span><span class="n">repo_id</span><span class="o">=</span><span class="s2">&quot;rcjackson/lakebreeze-resnet50&quot;</span><span class="p">,</span>
             <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">.safetensors&quot;</span><span class="p">)</span>
     <span class="n">load_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">)</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">radar_scan</span><span class="o">.</span><span class="n">pytorch_image</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">radar_scan</span><span class="o">.</span><span class="n">pytorch_image</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">image</span><span class="p">)[</span><span class="s1">&#39;out&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">T</span>
@@ -365,15 +369,15 @@
 
 <div class="viewcode-block" id="infer_lake_breeze_batch">
 <a class="viewcode-back" href="../../../dev_reference/generated/adam.model.infer_lake_breeze_batch.html#adam.model.infer_lake_breeze_batch">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">infer_lake_breeze_batch</span><span class="p">(</span><span class="n">radar_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-                    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;lakebreeze_best_model_fcn_resnet50&#39;</span><span class="p">,</span>
-                    <span class="n">area_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>    
+<span class="k">def</span><span class="w"> </span><span class="nf">infer_lake_breeze_batch</span><span class="p">(</span><span class="n">radar_list</span><span class="p">,</span>
+                            <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;lakebreeze_best_model_fcn_resnet50&#39;</span><span class="p">,</span>
+                            <span class="n">area_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This module will infer the location of the lake breeze from a batch of radar images.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    radar_scan: list</span>
+<span class="sd">    radar_scan: list of RadarImage</span>
 <span class="sd">        The list of RadarImages containing the radar image.</span>
 <span class="sd">    model_name: str</span>
 <span class="sd">        The model to use. Currently, ADAM has 2 models:</span>
@@ -413,13 +417,22 @@
     <span class="n">state_dict</span> <span class="o">=</span> <span class="n">hf_hub_download</span><span class="p">(</span><span class="n">repo_id</span><span class="o">=</span><span class="s2">&quot;rcjackson/lakebreeze-resnet50&quot;</span><span class="p">,</span>
             <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">.safetensors&quot;</span><span class="p">)</span>
     <span class="n">load_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">)</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">pytorch_image</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">radar_list</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radar_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">pytorch_image</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">radar_list</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radar_list</span><span class="p">,</span> <span class="n">RadarImage</span><span class="p">):</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">radar_list</span><span class="o">.</span><span class="n">pytorch_image</span>
+
     <span class="n">mask</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">image</span><span class="p">)[</span><span class="s1">&#39;out&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
     <span class="c1"># Filter out small regions that are not lake breezes</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">radar_list</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radar_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">nsamples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">radar_list</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nsamples</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsamples</span><span class="p">):</span>
         <span class="n">labels</span><span class="p">,</span> <span class="n">num_features</span> <span class="o">=</span> <span class="n">label</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
         <span class="n">largest_area</span> <span class="o">=</span> <span class="o">-</span><span class="mi">99999</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_features</span><span class="p">):</span>
@@ -428,7 +441,10 @@
                 <span class="n">largest_area</span> <span class="o">=</span> <span class="n">area</span>
             <span class="k">if</span> <span class="n">area</span> <span class="o">&lt;</span> <span class="n">area_threshold</span><span class="p">:</span>
                 <span class="n">mask</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">radar_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lakebreeze_mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radar_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">radar_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lakebreeze_mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radar_list</span><span class="p">,</span> <span class="n">RadarImage</span><span class="p">):</span>
+        <span class="n">radar_list</span><span class="o">.</span><span class="n">lakebreeze_mask</span> <span class="o">=</span> <span class="n">mask</span>
     <span class="k">return</span> <span class="n">radar_list</span></div>
 
 </pre></div>
