@@ -293,13 +293,15 @@ in Py-ART and for inference in the lake-breeze prediction model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pyart_object</strong> (<code class="xref py py-meth docutils literal notranslate"><span class="pre">pyart.core.Radar()</span></code>) – The PyART radar object that stores the radar data.</p></li>
+<li><p><strong>pyart_object</strong> (<code class="xref py py-meth docutils literal notranslate"><span class="pre">pyart.core.Radar()</span></code> or str) – The PyART radar object that stores the radar data. This could also be a link
+to the radar scan file (useful for batch processing to preserve memory).</p></li>
 <li><p><strong>lat_range</strong> (<em>2-tuple</em>) – The minimum and maximum latitude of the inference domain.</p></li>
 <li><p><strong>lon_range</strong> (<em>2-tuple</em>) – The minimum and maximum longitude of the inference domain.</p></li>
 <li><p><strong>grid_lat</strong> (<em>ndarray</em>) – The latitude of each point in the inference domain.</p></li>
 <li><p><strong>grid_lon</strong> (<em>ndarray</em>) – The longitude of each point in the inference domain.</p></li>
 <li><p><strong>pytorch_image</strong> (<code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor()</span></code>) – The tensor containing the preprocessed radar scan for inference.</p></li>
 <li><p><strong>lakebreeze_mask</strong> (<em>256 x 256 ndarray</em>) – The inferred lake breeze mask, where 1 = lakebreeze and 0 = not a lake breeze.</p></li>
+<li><p><strong>times</strong> (<em>list</em><em> of </em><em>np.datetime64</em><em>(</em><em>'s'</em><em>)</em>) – The epoch time of the radar scans.</p></li>
 </ul>
 </dd>
 </dl>
@@ -314,31 +316,40 @@ in Py-ART and for inference in the lake-breeze prediction model.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adam.io.RadarImage.__init__" title="adam.io.RadarImage.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate</span></code>([start_time, end_time])</p></td>
+<td><p>This function aggregates the lake breeze mask over a specified time period.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <p class="rubric">Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid_lat</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregated_mask</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid_lon</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid_lat</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lakebreeze_mask</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid_lon</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_range</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lakebreeze_mask</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lon_range</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_range</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyart_object</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lon_range</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytorch_image</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyart_object</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytorch_image</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">times</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
