@@ -17,7 +17,13 @@ classifiers = [
 ]
 license = {text = "BSD license"}
 dependencies = [
-
+    "torchvision",
+    "pytorch",
+    "huggingface_hub",
+    "arm_pyart",
+    "safetensors",
+    "cartopy",
+    "boto3",
 ]
 
 dynamic = ["version"]

@@ -13,5 +13,7 @@ huggingface_hub
 arm_pyart
 safetensors
 cartopy
+boto3
+
 
 
