@@ -47,7 +47,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: doc/build/html
+          publish_dir: docs/build/html
           cname: https://rcjackson.github.io/ADAM
           publish_branch: gh-pages
           
