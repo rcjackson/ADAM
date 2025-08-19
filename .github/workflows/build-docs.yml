@@ -41,6 +41,12 @@ jobs:
           cd docs
           make html
       
+      - name: Upload documentation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: docs/build/html
+      
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: actions/deploy-pages@v4
@@ -49,8 +55,4 @@ jobs:
           branch: gh-pages
           folder: docs/build/html
 
-      - name: Upload documentation artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: docs/build/html
+      
