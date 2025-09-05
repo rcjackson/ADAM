@@ -40,10 +40,11 @@ jobs:
         run: |
           cd docs
           make html
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: docs/_build/html
       
   deploy:
     needs: build-docs
