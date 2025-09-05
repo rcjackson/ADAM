@@ -42,7 +42,7 @@ jobs:
           make html
       
   deploy:
-    needs: build
+    needs: build-docs
     runs-on: ubuntu-latest
     environment:
       name: github-pages
