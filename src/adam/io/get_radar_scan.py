@@ -67,6 +67,8 @@ class RadarImage(object):
         mask: ndarray
             The lake breeze mask for the specified time.
         """
+        if len(self.lakebreeze_mask.shape) == 2:
+            return self.lakebreeze_mask
         if isinstance(key, int):
             return self.lakebreeze_mask[key]
         elif isinstance(key, np.datetime64):
