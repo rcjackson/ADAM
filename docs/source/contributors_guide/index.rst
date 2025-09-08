@@ -146,31 +146,31 @@ For an example format of the documentation, see this:
     def infer_lake_breeze(radar_scan: RadarImage,
                     model_name='lakebreeze_model_fcn_resnet50_no_augmentation',
                     area_threshold=20):
-    """
-    This module will infer the location of the lake breeze from a radar image.
+        """
+        This module will infer the location of the lake breeze from a radar image.
 
-    Parameters
-    ----------
-    radar_scan: :code:`RadarImage`
-        The RadarImage object containing the radar image.
-    model_name: str
-        The model to use. Currently, ADAM has 2 models:
-        'lakebreeze_model_fcn_resnet50_no_augmentation': 
-        A fine-tuned ResNet50 with no data augmentation. Typically more liberal
-        in detecting lake breezes.
-        'lakebreeze_best_model_fcn_resnet50':
-        A fine-tuned ResNet50 trained with data augmentation. Typically more conservative
-        in detecting lake breezes.
-    area_threshold: int
-        The minimum continuous area in pixels for lake breeze segments. This helps
-        remove false positive speckles that are identified by the model.
+        Parameters
+        ----------
+        radar_scan: :code:`RadarImage`
+            The RadarImage object containing the radar image.
+        model_name: str
+            The model to use. Currently, ADAM has 2 models:
+            'lakebreeze_model_fcn_resnet50_no_augmentation': 
+            A fine-tuned ResNet50 with no data augmentation. Typically more liberal
+            in detecting lake breezes.
+            'lakebreeze_best_model_fcn_resnet50':
+            A fine-tuned ResNet50 trained with data augmentation. Typically more conservative
+            in detecting lake breezes.
+        area_threshold: int
+            The minimum continuous area in pixels for lake breeze segments. This helps
+            remove false positive speckles that are identified by the model.
 
-    Returns
-    -------
-    radar_scan: :code:`RadarImage`
-        The RadarImage with the lake breeze mask.
-    """     
-    (your code is here)
+        Returns
+        -------
+        radar_scan: :code:`RadarImage`
+            The RadarImage with the lake breeze mask.
+        """     
+        (your code is here)
 
 
 Testing

@@ -7,5 +7,6 @@ __version__ = '0.1.0'
 from . import io  # noqa
 from . import model   # noqa
 from . import vis  # noqa
+from . import util  # noqa
 
 
