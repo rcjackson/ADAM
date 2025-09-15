@@ -35,6 +35,17 @@ To visualize your lakebreeze image on a base reflectivity plot, simply
       
     adam.vis.visualize_lake_breeze(rad_scan[1], vmin=0, vmax=30, cmap='ChaseSpectral')
 
+.. plot::
+
+    import adam
+    import matplotlib.pyplot as plt
+
+    rad_scan1 = adam.io.preprocess_radar_image('KLOT', '2025-07-15T18:00:00')
+    rad_scan1 = adam.model.infer_lake_breeze(
+        rad_scan1, model_name='lakebreeze_model_fcn_resnet50_no_augmentation')
+    fig, ax = adam.vis.visualize_lake_breeze(rad_scan1, vmin=0, vmax=30, cmap='ChaseSpectral')
+    plt.show()
+
 
 
 

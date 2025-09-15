@@ -45,7 +45,6 @@ def azimuth_point(instrument_lat, instrument_lon,
     labels, num_features = label(mask)
     area_threshold = 20
     largest_area = -99999
-    largest_index = 0
     mask = mask.T
     for i in range(num_features):
         area = mask[labels == i].sum()
@@ -55,8 +54,14 @@ def azimuth_point(instrument_lat, instrument_lon,
             mask[labels == i] = 0
 
     center = center_of_mass(mask)
-    angle = np.atan2(-(center[1] - lat_index), (center[0] - lon_index))
-    if angle < 0:
-        angle = angle + 2 * np.pi
+    num_y = len(radar_image.grid_y)
+    num_x = len(radar_image.grid_x)
+    center_x = radar_image.grid_x[int(center[1])]
+    center_y = radar_image.grid_y[int(center[0])]
+    instrument_x = radar_image.grid_x[num_x - lon_index]
+    instrument_y = radar_image.grid_y[lat_index]
+
+    angle = np.atan2((center_x - instrument_x), (center_y - instrument_y))
     deg_angle = np.rad2deg(angle)
+    deg_angle = (deg_angle + 360) % 360
     return deg_angle, lats[int(center[0])], lons[int(center[1])]

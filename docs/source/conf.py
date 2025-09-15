@@ -26,14 +26,22 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
+    "sphinx_gallery.gen_gallery",
+    "sphinx_gallery.load_style",
     "sphinx_design",
     "myst_nb",
 ]
+
+sphinx_gallery_conf = {
+    "examples_dirs": "../../examples",
+    "gallery_dirs": "source/auto_examples",
+}
 
 templates_path = ['_templates']
 exclude_patterns = []
 source_suffix = ".rst"
 master_doc = "index"
+nbsphinx_timeout = 120
 
 intersphinx_mapping = {
     'pyart': ('https://arm-doe.github.io/pyart/', None),
