@@ -42,3 +42,14 @@ Main module for visualization.
     :members:
     :undoc-members:
     :show-inheritance:
+
+==================
+:mod:`util` Module
+==================
+
+Module with various utilities.
+
+.. automodule:: adam.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
