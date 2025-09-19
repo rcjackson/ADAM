@@ -130,7 +130,8 @@ class RadarImage(object):
 
 
 def preprocess_radar_image(radar, rad_time=None, lat_range=(41.1280, 42.5680),
-                           lon_range=(-88.7176, -87.2873)):
+                           lon_range=(-88.7176, -87.2873),
+                           bucket_name='unidata-nexrad-level2'):
     """
     This module will preprocess the NEXRAD radar data for inference into the lake-breeze
     prediction model of ADAM.
@@ -148,6 +149,8 @@ def preprocess_radar_image(radar, rad_time=None, lat_range=(41.1280, 42.5680),
     lon_range: 2-tuple of floats
         The minimum and maximum longitude of the domain in degrees. Default is a centered
         domain around the KLOT Chicago area radar.
+    bucket_name: str
+        The NEXRAD S3 bucket to use. Default is 'unidata-nexrad-level2'.
 
     Returns
     -------
@@ -166,7 +169,7 @@ def preprocess_radar_image(radar, rad_time=None, lat_range=(41.1280, 42.5680),
         day = right_now.day
 
         s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED))
-        bucket_name = 'noaa-nexrad-level2'
+        bucket_name = 'unidata-nexrad-level2'
         radar = "KLOT"
         prefix = f'{year}/{month:02d}/{day:02d}/{radar}'
         response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
@@ -187,7 +190,7 @@ def preprocess_radar_image(radar, rad_time=None, lat_range=(41.1280, 42.5680),
                     datetime.strptime(name, f"{radar}%Y%m%d_%H%M%S_V06"))
 
         time_list = np.array(time_list)
-        path = "s3://noaa-nexrad-level2/" + file_list[np.argmin(np.abs(time_list - right_now))]
+        path = f"s3://{bucket_name}/" + file_list[np.argmin(np.abs(time_list - right_now))]
         cur_radar = pyart.io.read_nexrad_archive(path)
     elif isinstance(radar, pyart.core.Radar):
         cur_radar = radar
