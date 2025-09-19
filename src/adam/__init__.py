@@ -1,7 +1,7 @@
 """Top-level package for ATMOS Analogue Digital Twin."""
 
 __author__ = """Robert Jackson, Seongha Park"""
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 
 from . import io  # noqa

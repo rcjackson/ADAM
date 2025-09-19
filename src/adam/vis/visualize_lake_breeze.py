@@ -38,7 +38,7 @@ def visualize_lake_breeze(radar_scan: RadarImage, bg_field='reflectivity', time=
     vmax = kwargs.pop('vmax', 60)
     sweep = kwargs.pop('sweep', 0)
     
-    if isinstance(radar_scan.pyart_object, list):
+    if isinstance(radar_scan.pyart_object, list) or isinstance(radar_scan.pyart_object, np.ndarray):
         my_times = np.array(radar_scan.times)
         if time is None:
             raise ValueError("Since the input radar_scan represents a batch of radar files, the UTC time in YYYY-MM-DDTHH:MM:SS format must be specified!")
