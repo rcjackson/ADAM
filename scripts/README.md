@@ -2,6 +2,8 @@
 
 A Python script to edit and submit Mobotix camera jobs to the Waggle Edge Scheduler using the `sesctl` CLI. It is designed for dynamic, event-driven job management, such as triggering IR scans based on weather model or radar analysis.
 
+[Mobotix Scanner documentation](https://portal.sagecontinuum.org/apps/app/bhupendraraut/mobotix-scan) for understanding scan types and job submission script.
+
 ## Overview
 
 - Dynamically generates a YAML job file for Mobotix IR scanning, with directions and other parameters as arguments.
