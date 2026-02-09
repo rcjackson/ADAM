@@ -1,9 +1,9 @@
 import numpy as np
-
+import logging
 from adam.io import RadarImage
 from scipy.ndimage import center_of_mass, label
 
-def azimuth_point(instrument_lat, instrument_lon, 
+def azimuth_point(instrument_lon, instrument_lat, 
                   radar_image: RadarImage, index=None,
                   area_threshold=20):
     """
@@ -58,10 +58,20 @@ def azimuth_point(instrument_lat, instrument_lon,
     num_x = len(radar_image.grid_x)
     center_x = radar_image.grid_x[int(center[1])]
     center_y = radar_image.grid_y[int(center[0])]
-    instrument_x = radar_image.grid_x[num_x - lon_index]
+    logging.info(f"Center of mass: {center}, Center lat/lon: {center_y}, {center_x}")
+    instrument_x = radar_image.grid_x[lon_index]
     instrument_y = radar_image.grid_y[lat_index]
-
-    angle = np.atan2((center_x - instrument_x), (center_y - instrument_y))
+    logging.info(f"Instrument lat/lon: {instrument_y}, {instrument_x}")
+    angle = np.arctan2((center_x - instrument_x), (center_y - instrument_y))
     deg_angle = np.rad2deg(angle)
     deg_angle = (deg_angle + 360) % 360
-    return deg_angle, lats[int(center[0])], lons[int(center[1])]
+
+    # Get the distance from the instrument to the nearest point in the lake breeze region
+    x, y = np.meshgrid(radar_image.grid_x, radar_image.grid_y)
+    dist = np.sqrt((x - instrument_x)**2 + (y - instrument_y)**2)
+    dist = dist[mask == 1]
+    dist = np.min(dist)
+    return deg_angle, lats[int(center[0])], lons[int(center[1])], dist
+
+
+    
