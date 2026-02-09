@@ -24,6 +24,7 @@ dependencies = [
     "safetensors",
     "cartopy",
     "boto3",
+    "paramiko"
 ]
 
 dynamic = ["version"]
