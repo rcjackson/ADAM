@@ -7,6 +7,7 @@ coverage==7.9.2
 twine==6.1.0
 ruff==0.12.3
 pytest==8.4.1
+netcdf4==1.7.3
 torchvision
 torch
 huggingface_hub
