@@ -33,7 +33,7 @@ def test_make_scan_file():
         assert line == expected_line, f"Line {i} does not match expected output.\nGot: {line}\nExpected: {expected_line}"
 
 def test_send_scan():
-    from adam.triggering.halo_lidar import send_scan
+    from adam.triggering.halo_lidar import send_scanpy
     from adam.testing import TEST_RHI_FILE
     from adam.testing.fake_lidar import FakeSSHClient
     lidar_ip_addr = None

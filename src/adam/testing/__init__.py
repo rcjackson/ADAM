@@ -1,3 +1,24 @@
+"""
+============================
+adam.testing (adam.testing)
+============================
+
+.. currentmodule:: adam.testing
+
+This module handles testing utilities for ADAM.
+
+
+
+.. autosummary::
+    :toctree: generated/
+
+    FakeSSHClient
+    FakeSFTP
+    TEST_RHI_FILE
+    TEST_PPI_FILE
+    TEST_PPI_TRIGGERED_SCAN
+    TEST_RHI_TRIGGERED_SCAN
+"""
 import os
 
 from .fake_lidar import FakeSFTP, FakeSSHClient        # noqa
