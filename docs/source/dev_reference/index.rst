@@ -43,6 +43,28 @@ Main module for visualization.
     :undoc-members:
     :show-inheritance:
 
+========================
+:mod:`triggering` Module
+========================
+
+Main module for triggering lidar scans.
+
+.. automodule:: adam.triggering
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+========================
+:mod:`testing` Module
+========================
+
+Main module for testing.
+
+.. automodule:: adam.triggering
+    :members:
+    :undoc-members:
+    :show-inheritance:
+   
 ==================
 :mod:`util` Module
 ==================
