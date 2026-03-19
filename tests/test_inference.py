@@ -49,7 +49,6 @@ def test_infer_fcn_resnet50_batch():
             f"{tmpdir}/*.nc", parallel=True)
         rad_scan = adam.model.infer_lake_breeze_batch(
             rad_scan, model_name='lakebreeze_best_model_fcn_resnet50')
-        print(rad_scan.times)
         assert len(rad_scan[:]) == 2
         np.testing.assert_almost_equal(rad_scan[0].sum(), 761, decimal=-2)
         np.testing.assert_almost_equal(rad_scan[1].sum(), 783, decimal=-2)

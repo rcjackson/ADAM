@@ -8,7 +8,6 @@ adam.testing (adam.testing)
 This module handles testing utilities for ADAM.
 
 
-
 .. autosummary::
     :toctree: generated/
 

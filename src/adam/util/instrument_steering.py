@@ -74,4 +74,118 @@ def azimuth_point(instrument_lon, instrument_lat,
     return deg_angle, lats[int(center[0])], lons[int(center[1])], dist
 
 
-    
+def azimuth_from_ellipse(instrument_lon, instrument_lat,
+                          radar_image: RadarImage, index=None,
+                          area_threshold=20):
+    """
+    Fit an ellipse to the lake breeze mask via PCA, find the endpoints of the
+    major axis (leftmost and rightmost mask pixels projected onto that axis),
+    and return the azimuth from the instrument perpendicular to the major axis.
+
+    Parameters
+    ----------
+    instrument_lon : float
+        Longitude of the instrument in degrees.
+    instrument_lat : float
+        Latitude of the instrument in degrees.
+    radar_image : RadarImage
+        The RadarImage object containing the radar data and metadata.
+    index : int, optional
+        Time index of the mask to use. If None, uses the first frame.
+    area_threshold : int
+        Minimum contiguous area in pixels to retain (removes small speckles).
+
+    Returns
+    -------
+    azimuth : float
+        Azimuth angle in degrees from the instrument, pointing perpendicular
+        to the major axis of the fitted ellipse and toward the ellipse center.
+    left_point : tuple of (float, float)
+        (lat, lon) of the endpoint of the major axis with the smallest
+        projection value (i.e. the "leftmost" tip of the ellipse).
+    right_point : tuple of (float, float)
+        (lat, lon) of the endpoint of the major axis with the largest
+        projection value (i.e. the "rightmost" tip of the ellipse).
+    center_point : tuple of (float, float)
+        (lat, lon) of the centroid of the lake breeze mask.
+    """
+    if index is None:
+        mask = radar_image[0]
+    else:
+        mask = radar_image[index]
+
+    lats = radar_image.grid_lat
+    lons = radar_image.grid_lon
+
+    lat_index = np.argmin(np.abs(lats - instrument_lat))
+    lon_index = np.argmin(np.abs(lons - instrument_lon))
+    instrument_x = radar_image.grid_x[lon_index]
+    instrument_y = radar_image.grid_y[lat_index]
+
+    # Filter small regions (mirrors azimuth_point behaviour)
+    labels, num_features = label(mask)
+    mask = mask.T
+    for i in range(num_features):
+        area = mask[labels == i].sum()
+        if area < area_threshold:
+            mask[labels == i] = 0
+
+    rows, cols = np.where(mask == 1)
+    if len(rows) == 0:
+        raise ValueError("No lake breeze pixels remaining after area filtering.")
+
+    # Physical (metre) coordinates of each lake-breeze pixel
+    xs = radar_image.grid_x[cols]
+    ys = radar_image.grid_y[rows]
+
+    # Centroid
+    cx = np.mean(xs)
+    cy = np.mean(ys)
+
+    # PCA: covariance matrix → major axis = eigenvector of largest eigenvalue
+    dx = xs - cx
+    dy = ys - cy
+    cov = np.array([[np.mean(dx ** 2), np.mean(dx * dy)],
+                    [np.mean(dx * dy), np.mean(dy ** 2)]])
+    eigenvalues, eigenvectors = np.linalg.eigh(cov)
+    major_axis = eigenvectors[:, np.argmax(eigenvalues)]  # [east, north] unit vector
+
+    # Project every pixel onto the major axis; extremes are the left/right tips
+    projections = dx * major_axis[0] + dy * major_axis[1]
+    left_x, left_y = xs[np.argmin(projections)], ys[np.argmin(projections)]
+    right_x, right_y = xs[np.argmax(projections)], ys[np.argmax(projections)]
+
+    def xy_to_latlon(x, y):
+        xi = np.argmin(np.abs(radar_image.grid_x - x))
+        yi = np.argmin(np.abs(radar_image.grid_y - y))
+        return float(lats[yi]), float(lons[xi])
+
+    left_point = xy_to_latlon(left_x, left_y)
+    right_point = xy_to_latlon(right_x, right_y)
+    center_point = xy_to_latlon(cx, cy)
+
+    # Azimuth of the major axis (degrees from north, clockwise)
+    major_azimuth = np.rad2deg(np.arctan2(major_axis[0], major_axis[1]))
+
+    # Two candidate perpendicular azimuths
+    perp1 = (major_azimuth + 90) % 360
+    perp2 = (major_azimuth - 90) % 360
+
+    # Pick the perpendicular that points from the instrument toward the ellipse centre
+    center_azimuth = np.rad2deg(
+        np.arctan2(cx - instrument_x, cy - instrument_y)
+    ) % 360
+
+    def _angle_diff(a, b):
+        d = abs((a - b) % 360)
+        return min(d, 360 - d)
+
+    azimuth = perp1 if _angle_diff(perp1, center_azimuth) <= _angle_diff(perp2, center_azimuth) else perp2
+
+    logging.info(
+        f"Ellipse major-axis azimuth: {major_azimuth:.1f}°, "
+        f"perpendicular azimuth: {azimuth:.1f}°"
+    )
+    logging.info(f"Left tip: {left_point}, Right tip: {right_point}, Centre: {center_point}")
+
+    return azimuth, left_point, right_point, center_point
