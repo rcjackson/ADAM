@@ -11,6 +11,7 @@ This module contains utility functions for the ADAM package.
     :toctree: generated/
 
     azimuth_point
+    azimuth_from_ellipse
 """
 
-from .instrument_steering import azimuth_point
+from .instrument_steering import azimuth_point, azimuth_from_ellipse
