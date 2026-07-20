@@ -38,7 +38,12 @@ sphinx_gallery_conf = {
 }
 
 templates_path = ['_templates']
-exclude_patterns = []
+# Sphinx-Gallery generates a downloadable .ipynb copy of each example
+# alongside its .rst page. Without this exclude, myst-nb picks up that
+# .ipynb as its own document (same docname as the .rst page), executes it
+# independently of the gallery's own execution settings, and shadows the
+# .rst page's content and labels.
+exclude_patterns = ['source/auto_examples/*.ipynb']
 source_suffix = ".rst"
 master_doc = "index"
 nbsphinx_timeout = 120

@@ -31,6 +31,9 @@ def azimuth_point(instrument_lon, instrument_lat,
        Latitude of the center of the largest lake breeze region.
     lon_center: float
        Longitude of the center of the largest lake breeze region.
+    dist: float
+       Distance in the radar image's grid units from the instrument to the
+       nearest point in the lake breeze region.
     """
     # Convert lat/lon to radians
     if index is None:
