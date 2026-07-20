@@ -27,7 +27,7 @@ rad_scan = adam.model.infer_lake_breeze(
 """
 Calculate the azimuth angle from the radar to the lake breeze front center.
 """
-angle, lat, lon = adam.util.azimuth_point(atmos_location[1], atmos_location[0], rad_scan)
+angle, lat, lon, dist = adam.util.azimuth_point(atmos_location[1], atmos_location[0], rad_scan)
 
 print(f'Azimuth angle to point radar: {angle:.2f} degrees'
       f'\nLatitude: {lat:.4f}, Longitude: {lon:.4f}')

@@ -60,7 +60,7 @@ Main module for triggering lidar scans.
 
 Main module for testing.
 
-.. automodule:: adam.triggering
+.. automodule:: adam.testing
     :members:
     :undoc-members:
     :show-inheritance:

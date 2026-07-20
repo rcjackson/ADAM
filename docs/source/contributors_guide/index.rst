@@ -107,14 +107,16 @@ For more on PEP8 style:
     `<https://www.python.org/dev/peps/pep-0008/>`_
 
 To install pycode style:
-::
+
+.. code-block:: console
+
     conda install pycodestyle
-::
 
 To install pylint:
-::
+
+.. code-block:: console
+
     conda install pylint
-::
 
 
 Python File Setup
@@ -211,12 +213,11 @@ forking the repository on GitHub, create your own branch by doing:
     git checkout -b this_branch
     git branch this_branch
 
-::
-
 Make your changes, commit, and then to push to that branch do:
-::
+
+.. code-block:: console
+
     git push origin this_branch
-::
 
 After that is done, make a pull request from that branch to the master branch
 on rcjackson/ADAM where the maintainers will review your pull request.
