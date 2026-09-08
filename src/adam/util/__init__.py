@@ -12,6 +12,8 @@ This module contains utility functions for the ADAM package.
 
     azimuth_point
     azimuth_from_ellipse
+    aeqd_to_lonlat
 """
 
-from .instrument_steering import azimuth_point, azimuth_from_ellipse
+from .geodesy import aeqd_to_lonlat
+from .instrument_steering import azimuth_from_ellipse, azimuth_point

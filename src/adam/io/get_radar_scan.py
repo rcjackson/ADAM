@@ -5,7 +5,6 @@ import cmweather
 import matplotlib.pyplot as plt
 import torch
 import os
-import cartopy.crs as ccrs
 import dask.bag as db
 import tempfile
 
@@ -15,6 +14,64 @@ from botocore import UNSIGNED
 from torchvision.io import decode_image
 from torchvision import transforms
 from botocore.config import Config
+
+from ..util.geodesy import aeqd_to_lonlat
+
+def _render_model_input(radar, lat_range, lon_range):
+    """
+    Rasterise the lowest reflectivity sweep into the 256x256 image the
+    lake-breeze model expects.
+
+    The gate geolocation is computed by :func:`adam.util.aeqd_to_lonlat` and the
+    figure is drawn on a plain Matplotlib axes rather than a Cartopy GeoAxes.
+    Longitude and latitude are the axes coordinates directly, which is what a
+    plate carree map is, so the picture is unchanged -- but nothing in the path
+    consults a projection library. That matters because the image is model
+    input: PROJ 9.8 altered its equidistant cylindrical projection and shifted
+    every gate, which moved the inferred front by 17 km and broke the
+    triggering tests. Keeping the geolocation here means a projection release
+    cannot silently change what the network sees.
+
+    Parameters
+    ----------
+    radar: :func:`pyart.core.Radar`
+        The radar volume to render.
+    lat_range: 2-tuple of floats
+        The minimum and maximum latitude of the domain in degrees.
+    lon_range: 2-tuple of floats
+        The minimum and maximum longitude of the domain in degrees.
+
+    Returns
+    -------
+    image: :func:`torch.Tensor`
+        The normalized (1, 3, 256, 256) image ready for inference.
+    """
+    x, y, _ = radar.get_gate_x_y_z(0)
+    lon_0 = float(radar.longitude['data'][0])
+    lat_0 = float(radar.latitude['data'][0])
+    lon, lat = aeqd_to_lonlat(x, y, lon_0, lat_0)
+    reflectivity = radar.get_field(0, 'reflectivity')
+
+    fig, ax = plt.subplots(1, 1, figsize=(2.56, 2.56), frameon=False)
+    ax.pcolormesh(lon, lat, reflectivity, vmin=-20, vmax=60,
+                  cmap='HomeyerRainbow', edgecolors='face')
+    ax.set_xlim(lon_range[0], lon_range[1])
+    ax.set_ylim(lat_range[0], lat_range[1])
+    # A plate carree axes is square in degrees; match it so the aspect ratio of
+    # the rendered image is the same as it has always been.
+    ax.set_aspect('equal')
+    ax.set_axis_off()
+    fig.tight_layout(pad=0, w_pad=0, h_pad=0)
+    with tempfile.NamedTemporaryFile(mode='w+b') as temp_file:
+        fig.savefig(temp_file, dpi=100)
+        plt.close(fig)
+        image = decode_image(temp_file.name)
+    image = image[:3, :, :].float()
+    transform = transforms.Compose([
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ])
+    return torch.stack([transform(image)])
+
 
 class RadarImage(object):
     """
@@ -199,26 +256,7 @@ def preprocess_radar_image(radar, rad_time=None, lat_range=(41.1280, 42.5680),
     else:
         raise ValueError("The radar input must be a string or a PyART radar object.")
 
-    disp = pyart.graph.RadarMapDisplay(cur_radar)
-    fig, ax = plt.subplots(1, 1, figsize=(2.56, 2.56),
-            subplot_kw=dict(projection=ccrs.PlateCarree(), frameon=False))
-
-    disp.plot_ppi_map('reflectivity', sweep=0, min_lon=lon_range[0],
-            ax=ax, max_lon=lon_range[1], min_lat=lat_range[0], max_lat=lat_range[1],
-            embellish=False, vmin=-20, vmax=60, cmap='HomeyerRainbow',
-            add_grid_lines=False, colorbar_flag=False, title_flag=False)
-    ax.set_axis_off()
-    fig.tight_layout(pad=0, w_pad=0, h_pad=0)
-    with tempfile.NamedTemporaryFile(mode='w+b') as temp_file:
-        fig.savefig(temp_file, dpi=100)
-        plt.close(fig)
-        # Transform image
-        image = decode_image(temp_file.name)
-    image = image[:3, :, :].float()
-    transform = transforms.Compose([
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-        ])
-    image = torch.stack([transform(image)])
+    image = _render_model_input(cur_radar, lat_range, lon_range)
     lats = np.linspace(lat_range[1], lat_range[0], image.shape[3])
     lons = np.linspace(lon_range[0], lon_range[1], image.shape[2])
 
@@ -297,27 +335,7 @@ def preprocess_radar_image_batch(file, lat_range=(41.1280, 42.5680),
 
 def _preprocess(rad_file, lat_range, lon_range):
     radar = pyart.io.read(rad_file)
-    disp = pyart.graph.RadarMapDisplay(radar)
-    fig, ax = plt.subplots(1, 1, figsize=(2.56, 2.56),
-            subplot_kw=dict(projection=ccrs.PlateCarree(), frameon=False))
-
-    disp.plot_ppi_map('reflectivity', sweep=0, min_lon=lon_range[0],
-            ax=ax, max_lon=lon_range[1], min_lat=lat_range[0], max_lat=lat_range[1],
-            embellish=False, vmin=-20, vmax=60, cmap='HomeyerRainbow',
-            add_grid_lines=False, colorbar_flag=False, title_flag=False)
-    ax.set_axis_off()
-    fig.tight_layout(pad=0, w_pad=0, h_pad=0)
-    with tempfile.NamedTemporaryFile(mode='w+b' ) as temp_file:
-        fig.savefig(temp_file, dpi=100)
-        plt.close(fig)
-        # Transform image
-        image = decode_image(temp_file.name)
-    # Transform image
-    image = image[:3, :, :].float()
-    transform = transforms.Compose([
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-        ])
-    image = torch.stack([transform(image)])
+    image = _render_model_input(radar, lat_range, lon_range)
     rad_time = np.datetime64(radar.time["units"].split()[2])
     del radar
     return image, rad_time
