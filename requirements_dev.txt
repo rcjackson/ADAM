@@ -15,7 +15,6 @@ arm_pyart
 cmweather
 safetensors
 cartopy
-pyproj==3.7.2
 boto3
 sphinx_gallery
 

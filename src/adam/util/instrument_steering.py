@@ -1,7 +1,16 @@
-import numpy as np
+"""Utilities for pointing an instrument at a detected lake breeze front."""
+from __future__ import annotations
+
 import logging
-from adam.io import RadarImage
+from typing import TYPE_CHECKING
+
+import numpy as np
 from scipy.ndimage import center_of_mass, label
+
+if TYPE_CHECKING:
+    # Imported for type annotations only. A runtime import would be circular:
+    # adam.io reaches into adam.util for the gate geolocation helper.
+    from adam.io import RadarImage
 
 def azimuth_point(instrument_lon, instrument_lat, 
                   radar_image: RadarImage, index=None,
