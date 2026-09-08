@@ -35,6 +35,9 @@ jobs:
           python -c "import pyproj; print('pyproj', pyproj.__version__, 'PROJ', pyproj.proj_version_str)"
           python scripts/diagnose_trigger.py
 
+      - name: Dump model input at pinned pyproj
+        run: python scripts/diagnose_render.py /tmp/img_pinned.npy
+
       - name: Upgrade pyproj to the suspect version
         run: |
           pip install "pyproj==3.8.0"
@@ -42,6 +45,12 @@ jobs:
 
       - name: Diagnostic with pyproj 3.8.0 (expected RED configuration)
         run: python scripts/diagnose_trigger.py
+
+      - name: Dump model input at pyproj 3.8.0 and compare
+        run: |
+          python scripts/diagnose_render.py /tmp/img_380.npy
+          echo "===== RENDER DIFF: PROJ 9.5.1 vs 9.8.1 ====="
+          python scripts/diagnose_render.py /tmp/img_pinned.npy /tmp/img_380.npy
 
       - name: Run the actual failing test at pyproj 3.8.0
         continue-on-error: true
