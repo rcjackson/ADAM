@@ -123,7 +123,7 @@ Python File Setup
 -----------------
 
 In a new .py file, the top of the code should have the function, sphinx comments
-and the public and private functions within the .py file. Public fuunctions are
+and the public and private functions within the .py file. Public functions are
 listed first and then private functions and classes. Private functions should
 have an underscore in front of the name. A space is needed between the last
 function and the closing docstring quotation marks.
@@ -136,7 +136,7 @@ standards, modules should be added in the following order:
     3. Local application imports
 
 Following the main function def line, but before the code within it, a docstring is
-needed to explain all arguments, retuns, references, and other information. Please
+needed to explain all arguments, returns, references, and other information. Please
 follow the NumPy documentation style:
 
 `<https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt>`_
@@ -178,15 +178,15 @@ For an example format of the documentation, see this:
 Testing
 -------
 
-When adding a new function to pyart it is important to add it to the __init__.py
+When adding a new function to ADAM it is important to add it to the __init__.py
 under the corresponding folder.
 
 Create a test function and use assert to test the calculated values against known
 values. For an example, see:
 
-`<https://github.com/rcjackson/ADAM/tests/test_adam.py>`_
+`<https://github.com/rcjackson/ADAM/blob/main/tests/test_adam.py>`_
 
-Pytest will run this test whenever a pull request is made to the master branch
+Pytest will run this test whenever a pull request is made to the main branch
 of the rcjackson/ADAM repository. This will then allow the maintainers to
 determine how the pull request will affect the functionality of ADAM.
 
@@ -219,5 +219,5 @@ Make your changes, commit, and then to push to that branch do:
 
     git push origin this_branch
 
-After that is done, make a pull request from that branch to the master branch
+After that is done, make a pull request from that branch to the main branch
 on rcjackson/ADAM where the maintainers will review your pull request.

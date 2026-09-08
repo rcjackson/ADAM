@@ -17,7 +17,7 @@ the Romeoville radar (KLOT) in the Chicago metro area, simply do the following c
     rad_scan1 = adam.io.preprocess_radar_image('KLOT', '2025-07-15T18:00:00')
 
 Lakebreeze inference
-====================
+--------------------
 
 The next step is to develop the binary lakebreeze mask from the preprocessed radar data. This is also done
 with one line of code in ADAM:
@@ -28,12 +28,12 @@ with one line of code in ADAM:
         rad_scan1, model_name='lakebreeze_model_fcn_resnet50_no_augmentation')
 
 Visualizing your result
-=======================
+-----------------------
 To visualize your lakebreeze image on a base reflectivity plot, simply 
 
 .. code-block:: python 
       
-    adam.vis.visualize_lake_breeze(rad_scan[1], vmin=0, vmax=30, cmap='ChaseSpectral')
+    adam.vis.visualize_lake_breeze(rad_scan1, vmin=0, vmax=30, cmap='ChaseSpectral')
 
 .. plot::
 

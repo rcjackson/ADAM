@@ -12,7 +12,7 @@ To install ATMOS Analogue Digital Twin, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install adam
+    $ pip install adam-atmos
 
 This is the preferred method to install ATMOS Analogue Digital Twin, as it will always install the most recent stable release.
 
@@ -32,20 +32,20 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/rcjackson/adam
+    $ git clone https://github.com/rcjackson/ADAM.git
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl -OJL https://github.com/rcjackson/adam/tarball/master
+    $ curl -OJL https://github.com/rcjackson/ADAM/tarball/main
 
 Once you have a copy of the source, you can install it with:
 
 .. code-block:: console
 
-    $ python setup.py install
+    $ pip install .
 
 
-.. _Github repo: https://github.com/rcjackson/adam
-.. _tarball: https://github.com/rcjackson/adam/tarball/master
+.. _Github repo: https://github.com/rcjackson/ADAM
+.. _tarball: https://github.com/rcjackson/ADAM/tarball/main

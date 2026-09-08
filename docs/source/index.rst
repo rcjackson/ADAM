@@ -41,7 +41,7 @@ Welcome to ATMOS Analogue Digital Twin (ADAM)'s documentation!
         tools useful for developing ADAM.
 
     .. grid-item-card:: :octicon:`graph;10em`
-        :link: source/auto_examples/index
+        :link: auto_examples/index
         :link-type: doc
         :text-align: center
 
@@ -50,58 +50,36 @@ Welcome to ATMOS Analogue Digital Twin (ADAM)'s documentation!
         Check out ADAM's gallery of examples which contains
         sample code demonstrating various parts of ADAM's functionality.
 
-============
-Installation
-============
+Getting started
+===============
 
-
-Stable release
---------------
-
-
-To install the Argonne Testbed for Multiscale Observational Studies (ATMOS)
-Analogue Digital Twin, run this command in your terminal:
+ADAM is published on PyPI as ``adam-atmos``:
 
 .. code-block:: console
 
     $ pip install adam-atmos
 
-This is the preferred method to install the ATMOS Analogue Digital Twin,
-as it will always install the most recent stable release.
+See :doc:`installation` for installing from source and for the full list of
+requirements.
 
-If you don't have `pip`_ installed, this `Python installation guide`_ can guide
-you through the process.
+.. toctree::
+   :hidden:
+   :maxdepth: 2
 
-.. _pip: https://pip.pypa.io
-.. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
+   installation
+   user_guide/index
+   auto_examples/index
+   dev_reference/index
+   contributors_guide/index
 
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :caption: About
 
-From sources
-------------
-
-The sources for ATMOS Analogue Digital Twin can be downloaded from the `Github repo`_.
-
-You can either clone the public repository:
-
-.. code-block:: console
-
-    $ git clone git://github.com/rcjackson/adam
-
-Or download the `tarball`_:
-
-.. code-block:: console
-
-    $ curl -OJL https://github.com/rcjackson/adam/tarball/master
-
-Once you have a copy of the source, you can install it with:
-
-.. code-block:: console
-
-    $ python setup.py install
-
-
-.. _Github repo: https://github.com/rcjackson/adam
-.. _tarball: https://github.com/rcjackson/adam/tarball/master
+   readme
+   history
+   authors
 
 Indices and tables
 ==================

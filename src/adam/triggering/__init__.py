@@ -7,7 +7,6 @@ ADAM Triggering Module
 This module handles the generation of scan strategies and triggering of the lidar based on radar data.
 
 .. autosummary::
-
     :toctree: generated/
 
     make_scan_file
