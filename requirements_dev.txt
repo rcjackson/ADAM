@@ -12,6 +12,7 @@ torchvision
 torch
 huggingface_hub
 arm_pyart
+cmweather
 safetensors
 cartopy
 boto3

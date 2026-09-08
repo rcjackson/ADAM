@@ -1,2 +1,21 @@
 # pixi environments
 .pixi
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/
+
+# Sphinx
+docs/build/
+docs/source/auto_examples/
+docs/source/dev_reference/generated/
+docs/source/sg_execution_times.rst
+
+# macOS
+.DS_Store
